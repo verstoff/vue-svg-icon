@@ -35,7 +35,7 @@
 
 <script>
 
-import * as convert from 'lib/parse'
+import SVGtoArray from 'utils/svg-parse'
 
 function normalized (val, def) {
   val = typeof val === 'undefined' ? 1 : Number(val)
@@ -83,11 +83,10 @@ export default {
     icon () {
       let xml = require(`!xml-loader!svg/${this.name}.svg`)
       const t = xml.svg.$.viewBox.split(' ')
-      console.info(`src/svg/${this.name}.svg has been loaded`)
       return {
         width: t[2],
         height: t[3],
-        paths: convert.SVGtoArray(xml.svg)
+        paths: SVGtoArray(xml.svg)
       }
     },
     box () {
