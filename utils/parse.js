@@ -1,33 +1,25 @@
-"use strict";
 //  将SVG转换为数组
-function SVGtoArray(svgObj) {
-  const convertShapeToPath = require("./convertShapeToPath");
-  let SVGArray = [];
-  let node, subNode, groupNode, subsubNode;
+import convertShapeToPath from './convertShapeToPath'
 
-  for (node in svgObj) {
-    if (node ==='rect' || node === 'circle'|| node ==='ellipse'|| node === 'polygon'|| node ==='line'|| node === 'path') {
-      for (subNode of svgObj[node]) {
-        SVGArray.push(convertShapeToPath(subNode.$, node))
+export default function SVGtoArray(svgObj) {
+  let SVGArray = []
+
+  function walk (svgObj) {
+    for (let node in svgObj) {
+      if (node ==='rect' || node === 'circle'|| node ==='ellipse'|| node === 'polygon'|| node ==='line'|| node === 'path') {
+        for (let subNode of svgObj[node]) {
+          SVGArray.push(convertShapeToPath(subNode.$, node))
+        }
       }
-    }
-    else if (node === 'g') {
-      for (groupNode of svgObj[node]) {
-        for (subNode in groupNode) {
-          if (node ==='rect' || node === 'circle'|| node ==='ellipse'|| node === 'polygon'|| node ==='line'|| node === 'path') {
-            for (subsubNode of groupNode[subNode]) {
-              SVGArray.push(convertShapeToPath(subsubNode.$, subNode))
-            }
-          }
+      else if (node === 'g') {
+        for (let groupNode of svgObj[node]) {
+          walk(groupNode)
         }
       }
     }
   }
+
+  walk(svgObj)
+
   return SVGArray
 }
-
-
-module.exports = {
-  SVGtoArray
-};
-
