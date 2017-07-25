@@ -1,5 +1,3 @@
-"use strict";
-
 const regNumber = /[-+]?(?:\d*\.\d+|\d+\.?)(?:[eE][-+]?\d+)?/g;
 
 function rectHandler(node) {
@@ -87,10 +85,10 @@ function ellipseHandler(node) {
 }
 
 function lineHandler(node) {
-  let x1 = node.getAttribute("x1"),
-    y1 = node.getAttribute("y1"),
-    x2 = node.getAttribute("x2"),
-    y2 = node.getAttribute("y2");
+  let x1 = getAttribute(node, "x1", 0),
+    y1 = getAttribute(node, "y1", 0),
+    x2 = getAttribute(node, "x2", 0),
+    y2 = getAttribute(node, "y2", 0);
   if (isNaN(x1 - y1 + x2 - y2)) return;
   let path = 'M' + x1 + ' ' + y1 + 'L' + x2 + ' ' + y2;
   return {
@@ -100,7 +98,7 @@ function lineHandler(node) {
   };
 }
 
-module.exports = function (node, type) {
+export default function (node, type) {
   if (!type)return;
   // console.log(node, type)
   switch (type.toLowerCase()) {
@@ -120,7 +118,7 @@ module.exports = function (node, type) {
       }
     case "polygon" :
     case "polyline" : //ploygon与polyline是一样的,polygon多边形，polyline多边线
-      let points = (node.getAttribute("points").match(regNumber) || []).map(Number);
+      let points = (getAttribute(node, "points").match(regNumber) || []).map(Number);
       if (points.length < 4) {
         return;
       }
@@ -136,7 +134,7 @@ module.exports = function (node, type) {
 
 function formateColor(prop) {
   if (!prop) {
-    return 'transparent'
+    return
   }
   else if (prop === '#000000') {
     return ''
@@ -144,4 +142,8 @@ function formateColor(prop) {
   else {
     return prop
   }
+}
+
+function getAttribute (node, attr, def = '') {
+  return node[attr] || def
 }
