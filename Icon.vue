@@ -35,7 +35,7 @@
 
 <script>
 
-import SVGtoArray from 'utils/svg-parse'
+import SVGtoArray from './utils/svg-parse'
 
 function normalized (val, def) {
   val = typeof val === 'undefined' ? 1 : Number(val)
